@@ -1,11 +1,12 @@
 // src/routes/userRoutes.ts
 
 import express from 'express';
-import { createUser } from '../../controllers/Users/UserController';
+import UserController from '../../controllers/Users/UserController';
 
 const userRouter = express.Router();
 
-userRouter.post('/users', createUser);
+userRouter.get('/getUser', UserController.getUser);
+userRouter.post('/createUser', UserController.createUser);
 // Add other routes for CRUD operations
 
 export default userRouter;
