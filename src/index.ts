@@ -1,6 +1,7 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
-import routes from "./Routes";
+import routes from "./routes/Routes";
+import connection from "./helper/connection";
 
 dotenv.config();
 
@@ -32,6 +33,10 @@ router.use((req:Request, res:Response, next) => {
 
 const PORT = process.env.PORT || 5000;
 
+connection.then(() => {
     router.listen(PORT, () => {
-        console.log(`The server is running on port ${PORT}`)
+        console.log(`The server is running on the port ${PORT}`)
     });
+}).catch((error) => {
+    console.error('Error connecting to PostgreSQL database:', error);
+});
