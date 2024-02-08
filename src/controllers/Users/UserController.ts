@@ -7,9 +7,6 @@ import Joi from "joi";
 import RequestResponseMappings from "../../shared/Mappings/RequestResponseMappings";
 import jsonwebtoken from "jsonwebtoken";
 
-
-const JWT_SECRET_KEY: string = process.env.JWT_SECRET_KEY || "secret";
-
 export default {
     getUser: async (req: Request, res: Response) => {
         try {
@@ -103,6 +100,121 @@ export default {
                 "Failed to create user",
                 500
             )
+        }
+    },
+
+    deleteUser: async (req: Request, res: Response) => {
+        try {
+            const { id } = req.query;
+            if (!id) {
+                return RequestResponseMappings.sendErrorMessage(
+                    res,
+                    {},
+                    "User ID is required",
+                    400
+                );
+            }
+            const idNumber: number = parseInt(id as string);
+            const userRepository = getRepository(User);
+            const user = await userRepository.findOne({
+                where:
+                    {
+                        id:idNumber
+                    }
+            });
+            if (!user) {
+                return RequestResponseMappings.sendErrorMessage(
+                    res,
+                    {},
+                    "User not found",
+                    404
+                );
+            }
+            await userRepository.remove(user);
+            return RequestResponseMappings.sendSuccessMessage(
+                res,
+                {},
+                "User deleted successfully"
+            );
+        } catch (error) {
+            return RequestResponseMappings.sendErrorMessage(
+                res,
+                { error },
+                "Failed to delete user",
+                500
+            );
+        }
+    },
+
+    updateUser: async (req: Request, res: Response) => {
+        try {
+            const { name, email } = req.body;
+            const { id } = req.query;
+            const idNumber: number = parseInt(id as string);
+            const userRepository = getRepository(User);
+            const user = await userRepository.findOne({
+                where:
+                    {
+                        id:idNumber
+                    }
+            });
+            if (!user) {
+                return RequestResponseMappings.sendErrorMessage(
+                    res,
+                    {},
+                    "User not found",
+                    404
+                );
+            }
+            user.name = name;
+            user.email = email;
+            await userRepository.save(user);
+            return RequestResponseMappings.sendSuccessMessage(res, user);
+        } catch (error) {
+            return RequestResponseMappings.sendErrorMessage(
+                res,
+                { error },
+                "Failed to update user",
+                500
+            );
+        }
+    },
+
+    loginUser: async (req: Request, res: Response) => {
+        try {
+            const { email, password } = req.body;
+            const userRepository = getRepository(User);
+            const user = await userRepository.findOne({
+                where:
+                    {
+                        email:email
+                    }
+            });
+            if (!user) {
+                return RequestResponseMappings.sendErrorMessage(
+                    res,
+                    {},
+                    "User not found",
+                    404
+                );
+            }
+            const isValidPassword = await bcrypt.compare(password, user.password);
+            if (!isValidPassword) {
+                return RequestResponseMappings.sendErrorMessage(
+                    res,
+                    {},
+                    "Invalid credentials",
+                    400
+                );
+            }
+            return UserController.sendTokenWithPayload(res, user);
+        } catch (error) {
+            return RequestResponseMappings.sendErrorMessage(
+                res,
+                { error },
+                "Failed to login",
+                500
+            );
         }
     },
 
