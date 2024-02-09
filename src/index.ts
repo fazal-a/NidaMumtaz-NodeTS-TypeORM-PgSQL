@@ -35,7 +35,7 @@ const PORT = process.env.PORT || 5000;
 
 connection.then(() => {
     router.listen(PORT, () => {
-        console.log(`The server is running on the port ${PORT}`)
+        console.log(`The server is running on port ${PORT}`)
     });
 }).catch((error) => {
     console.error('Error connecting to PostgreSQL database:', error);

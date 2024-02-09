@@ -61,7 +61,6 @@ export default {
         try {
             const postRepository = getRepository(Post);
             const existingPosts = await postRepository.find({ relations: ["user"] });
-            console.log("existingPosts:::",existingPosts)
             if (existingPosts) {
                 return RequestResponseMappings.sendSuccessMessage(res, existingPosts)
             } else {

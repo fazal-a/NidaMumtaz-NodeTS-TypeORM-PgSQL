@@ -14,9 +14,9 @@ export default createConnection({
     synchronize: true,
     logging: true,
 }).then(connection => {
-    console.log("Connected to the PostgreSQL database");
+    console.log("Connected to PostgreSQL database");
     return connection;
 }).catch(error => {
-    console.error("Error connecting to the PostgreSQL database:", error);
+    console.error("Error connecting to PostgreSQL database:", error);
     throw error;
 });
