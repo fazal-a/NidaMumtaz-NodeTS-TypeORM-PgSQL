@@ -1,7 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-
-@Entity()
-export class User {
+import {Entity, PrimaryGeneratedColumn, Column, OneToMany, BaseEntity} from 'typeorm';
+import Post from "./Post";
+@Entity("UsersTable")
+export default class User extends BaseEntity {
     @PrimaryGeneratedColumn()
     id!: number;
 
@@ -13,4 +13,7 @@ export class User {
 
     @Column({ type: 'varchar' })
     password!: string;
+
+    @OneToMany( ()=>Post, (posts)=> posts.user)
+    posts!: Post[];
 }

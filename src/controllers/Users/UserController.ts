@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
 import {getRepository} from 'typeorm';
-import {User} from '../../entities/User';
+import User from '../../entities/User';
 import UserController from './UserController';
 import bcrypt from "bcrypt";
 import Joi from "joi";
@@ -43,7 +43,7 @@ export default {
             return RequestResponseMappings.sendErrorMessage(
                 res,
                 {error},
-                "failure in validation of email",
+                "failure in fetching User",
                 400
             )
         }
