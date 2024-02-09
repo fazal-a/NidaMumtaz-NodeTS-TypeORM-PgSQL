@@ -1,5 +1,6 @@
 import {createConnection} from "typeorm";
-import {User} from "../entities/User";
+import User from "../entities/User";
+import Post from "../entities/Post";
 
 
 export default createConnection({
@@ -9,7 +10,7 @@ export default createConnection({
     port: 5432,
     username: 'postgres',
     password: '1234',
-    entities: [User],
+    entities: [User, Post],
     synchronize: true,
     logging: true,
 }).then(connection => {
